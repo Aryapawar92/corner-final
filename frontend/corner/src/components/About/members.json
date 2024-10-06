@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Arya Pawar",
+    "role": "Developer",
+    "image": "/src/assets/arya.jpg",
+    "Linkedin": ""
+  },
+  {
+    "id": 2,
+    "name": "Sidharth Salian",
+    "role": "Developer",
+    "image": "/src/assets/sid2.jpg",
+    "Linkedin": ""
+  },
+  {
+    "id": 3,
+    "name": "Saad Shaikh",
+    "role": "Developer",
+    "image": "/src/assets/saad.jpg",
+    "Linkedin": ""
+  },
+  {
+    "id": 4,
+    "name": "Sarib Siddiqui",
+    "role": "Developer",
+    "image": "/src/assets/sarib.jpg",
+    "Linkedin": ""
+  }
+]

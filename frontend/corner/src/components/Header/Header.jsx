@@ -1,9 +1,11 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Header() {
+  const [isSignedIn, setIsSignedIn] = useState(
+    !!localStorage.getItem("authToken")
+  ); // Track sign-in state
   const [hovered1, setHovered1] = useState(false);
   const [hovered2, setHovered2] = useState(false);
   const [hovered3, setHovered3] = useState(false);
@@ -11,8 +13,23 @@ function Header() {
   const navigate = useNavigate();
 
   const gotoSignIn = () => {
-    console.log("clicked");
+    console.log("Sign In button clicked");
     navigate("/signin");
+  };
+
+  const handleSignIn = (token) => {
+    localStorage.setItem("authToken", token);
+    setIsSignedIn(true);
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem("authToken");
+    setIsSignedIn(false);
+  };
+
+  const handleProfileClick = () => {
+    console.log("Profile clicked");
+    navigate("/profile"); // Navigate to profile page
   };
 
   return (
@@ -81,14 +98,28 @@ function Header() {
           </nav>
           {/* Right Section */}
           <div className="flex items-center gap-6 pl-6">
-            <button
-              className="rounded-xl bg-black px-5 py-3 text-sm font-medium text-white shadow hover:bg-white hover:text-black font-poppins hover:scale-x-105 hover:scale-y-105 overflow-hidden transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl"
-              onClick={() => {
-                gotoSignIn();
-              }}
-            >
-              Sign In
-            </button>
+            {isSignedIn ? (
+              // Profile face circle for signed-in users
+              <div
+                className="w-10 h-10 bg-gray-300 rounded-full cursor-pointer overflow-hidden border-2 border-black hover:scale-110 transition-all duration-300"
+                onClick={handleProfileClick}
+              >
+                {/* Add user's profile image here */}
+                <img
+                  src="https://via.placeholder.com/40" // Replace with the actual profile picture URL
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              // Sign In button for non-signed-in users
+              <button
+                className="rounded-xl bg-black px-5 py-3 text-sm font-medium text-white shadow hover:bg-white hover:text-black font-poppins hover:scale-x-105 hover:scale-y-105 overflow-hidden transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl"
+                onClick={gotoSignIn}
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
       </div>

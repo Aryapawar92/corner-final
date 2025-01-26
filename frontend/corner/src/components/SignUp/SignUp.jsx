@@ -2,9 +2,39 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import qs from "qs";
 
 function SignUp() {
+  const router = useNavigate();
   const [hovered1, setHovered1] = useState(false);
+  const [user, setUser] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  });
+
+  const onSignUp = async (event) => {
+    event.preventDefault();
+    try {
+      const data = qs.stringify(user);
+      const config = {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      };
+      await axios
+        .post("http://localhost:8000/api/v1/users/register", data, config)
+        .then((res) => {
+          console.log(res.data);
+          router("/signin");
+        });
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#E0F7FA]">
@@ -26,6 +56,10 @@ function SignUp() {
                   className="border border-gray-300 p-3 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   type="text"
                   placeholder="Enter your first name"
+                  value={user.firstName}
+                  onChange={(e) =>
+                    setUser({ ...user, firstName: e.target.value })
+                  }
                 />
               </div>
               <div className="flex flex-col w-full">
@@ -36,6 +70,10 @@ function SignUp() {
                   className="border border-gray-300 p-3 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   type="text"
                   placeholder="Enter your last name"
+                  value={user.lastName}
+                  onChange={(e) =>
+                    setUser({ ...user, lastName: e.target.value })
+                  }
                 />
               </div>
             </div>
@@ -48,6 +86,8 @@ function SignUp() {
                 className="border border-gray-300 p-3 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 type="email"
                 placeholder="Enter your email"
+                value={user.email}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
               />
             </div>
 
@@ -59,6 +99,8 @@ function SignUp() {
                 className="border border-gray-300 p-3 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 type="password"
                 placeholder="Enter your password"
+                value={user.password}
+                onChange={(e) => setUser({ ...user, password: e.target.value })}
               />
             </div>
 
@@ -73,7 +115,10 @@ function SignUp() {
               />
             </div>
 
-            <button className="w-full py-3 bg-[#1976D2] hover:bg-[#0D47A1] text-white font-semibold font-space rounded-lg shadow-md transition duration-300 ease-in-out">
+            <button
+              className="w-full py-3 bg-[#1976D2] hover:bg-[#0D47A1] text-white font-semibold font-space rounded-lg shadow-md transition duration-300 ease-in-out"
+              onClick={onSignUp}
+            >
               Sign Up
             </button>
 

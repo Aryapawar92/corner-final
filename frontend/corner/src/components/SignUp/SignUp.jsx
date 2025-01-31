@@ -1,51 +1,74 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import qs from "qs";
 
 function SignUp() {
-  const router = useNavigate();
+  const navigate = useNavigate();
   const [hovered1, setHovered1] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
   const onSignUp = async (event) => {
     event.preventDefault();
-    try {
-      const data = qs.stringify(user);
-      const config = {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      };
-      await axios
-        .post("http://localhost:8000/api/v1/users/register", data, config)
-        .then((res) => {
-          console.log(res.data);
-          router("/signin");
-        });
-    } catch (error) {
-      console.log("Error: ", error);
+    setError("");
+
+    if (user.password !== user.confirmPassword) {
+      setError("Passwords do not match!");
+      return;
     }
+
+    try {
+      setIsLoading(true);
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/users/register",
+        {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          password: user.password,
+        }
+      );
+      console.log(response.data);
+      navigate("/signin");
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "An error occurred during signup"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUser((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#E0F7FA]">
-      {/* Main Box Section */}
       <div className="bg-white w-full max-w-[1000px] h-[600px] rounded-lg shadow-lg flex overflow-hidden">
-        {/* Left Side - Form Section */}
         <div className="flex flex-col justify-center w-full sm:w-1/2 px-8 bg-white">
-          <form className="w-full">
+          <form className="w-full" onSubmit={onSignUp}>
             <h2 className="text-3xl font-bold text-center text-black pb-4 font-space">
               Create Account
             </h2>
+
+            {error && (
+              <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+                {error}
+              </div>
+            )}
 
             <div className="flex flex-col sm:flex-row sm:space-x-4 pb-4">
               <div className="flex flex-col w-full">
@@ -55,11 +78,11 @@ function SignUp() {
                 <input
                   className="border border-gray-300 p-3 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   type="text"
+                  name="firstName"
                   placeholder="Enter your first name"
                   value={user.firstName}
-                  onChange={(e) =>
-                    setUser({ ...user, firstName: e.target.value })
-                  }
+                  onChange={handleChange}
+                  required
                 />
               </div>
               <div className="flex flex-col w-full">
@@ -69,11 +92,11 @@ function SignUp() {
                 <input
                   className="border border-gray-300 p-3 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   type="text"
+                  name="lastName"
                   placeholder="Enter your last name"
                   value={user.lastName}
-                  onChange={(e) =>
-                    setUser({ ...user, lastName: e.target.value })
-                  }
+                  onChange={handleChange}
+                  required
                 />
               </div>
             </div>
@@ -85,9 +108,11 @@ function SignUp() {
               <input
                 className="border border-gray-300 p-3 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 type="email"
+                name="email"
                 placeholder="Enter your email"
                 value={user.email}
-                onChange={(e) => setUser({ ...user, email: e.target.value })}
+                onChange={handleChange}
+                required
               />
             </div>
 
@@ -98,9 +123,12 @@ function SignUp() {
               <input
                 className="border border-gray-300 p-3 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 type="password"
+                name="password"
                 placeholder="Enter your password"
                 value={user.password}
-                onChange={(e) => setUser({ ...user, password: e.target.value })}
+                onChange={handleChange}
+                required
+                minLength={8}
               />
             </div>
 
@@ -111,15 +139,20 @@ function SignUp() {
               <input
                 className="border border-gray-300 p-3 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 type="password"
+                name="confirmPassword"
                 placeholder="Confirm your password"
+                value={user.confirmPassword}
+                onChange={handleChange}
+                required
               />
             </div>
 
             <button
-              className="w-full py-3 bg-[#1976D2] hover:bg-[#0D47A1] text-white font-semibold font-space rounded-lg shadow-md transition duration-300 ease-in-out"
-              onClick={onSignUp}
+              type="submit"
+              className="w-full py-3 bg-[#1976D2] hover:bg-[#0D47A1] text-white font-semibold font-space rounded-lg shadow-md transition duration-300 ease-in-out disabled:opacity-50"
+              disabled={isLoading}
             >
-              Sign Up
+              {isLoading ? "Signing up..." : "Sign Up"}
             </button>
 
             <motion.div
@@ -130,7 +163,7 @@ function SignUp() {
                 <p>Already have an account?</p>
                 <div className="relative">
                   <Link
-                    to={"/signin"}
+                    to="/signin"
                     className="text-black hover:text-indigo-700"
                   >
                     Sign In
@@ -146,7 +179,6 @@ function SignUp() {
           </form>
         </div>
 
-        {/* Right Side - Image Section */}
         <div className="hidden sm:block w-1/2 h-full">
           <img
             src="src/assets/mental-2-cover.jpg"

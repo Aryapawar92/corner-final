@@ -1,35 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Header() {
-  const [isSignedIn, setIsSignedIn] = useState(
-    !!localStorage.getItem("authToken")
-  ); // Track sign-in state
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const [hovered1, setHovered1] = useState(false);
   const [hovered2, setHovered2] = useState(false);
   const [hovered3, setHovered3] = useState(false);
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) setIsSignedIn(true);
+  }, []);
   const gotoSignIn = () => {
-    console.log("Sign In button clicked");
     navigate("/signin");
   };
 
-  const handleSignIn = (token) => {
-    localStorage.setItem("authToken", token);
-    setIsSignedIn(true);
-  };
-
-  const handleSignOut = () => {
-    localStorage.removeItem("authToken");
+  const handleLogout = async () => {
     setIsSignedIn(false);
-  };
-
-  const handleProfileClick = () => {
-    console.log("Profile clicked");
-    navigate("/profile"); // Navigate to profile page
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/users/logout",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      localStorage.removeItem("authToken");
+    } catch (error) {
+      console.error(
+        error.response?.data?.message || "An error occurred during logout"
+      );
+    }
   };
 
   return (
@@ -99,20 +104,13 @@ function Header() {
           {/* Right Section */}
           <div className="flex items-center gap-6 pl-6">
             {isSignedIn ? (
-              // Profile face circle for signed-in users
-              <div
-                className="w-10 h-10 bg-gray-300 rounded-full cursor-pointer overflow-hidden border-2 border-black hover:scale-110 transition-all duration-300"
-                onClick={handleProfileClick}
+              <button
+                className="rounded-xl bg-red-500 px-5 py-3 text-sm font-medium text-white shadow hover:bg-red-700 font-poppins hover:scale-105 overflow-hidden transition duration-300 ease-in-out"
+                onClick={handleLogout}
               >
-                {/* Add user's profile image here */}
-                <img
-                  src="https://via.placeholder.com/40" // Replace with the actual profile picture URL
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
-              </div>
+                Logout
+              </button>
             ) : (
-              // Sign In button for non-signed-in users
               <button
                 className="rounded-xl bg-black px-5 py-3 text-sm font-medium text-white shadow hover:bg-white hover:text-black font-poppins hover:scale-x-105 hover:scale-y-105 overflow-hidden transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl"
                 onClick={gotoSignIn}

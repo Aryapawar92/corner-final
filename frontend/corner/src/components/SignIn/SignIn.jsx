@@ -3,10 +3,52 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function SignIn() {
+  const navigate = useNavigate();
   const [hovered1, setHovered1] = useState(false);
   const [hovered2, setHovered2] = useState(false);
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+  });
+
+  const onSignIn = async (e) => {
+    try {
+      e.preventDefault();
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/users/login",
+        {
+          email: user.email,
+          password: user.password,
+          //accessToken: localStorage.getItem("authToken"),
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response.data);
+
+      const accessToken = response.data.message.accessToken; // Access token returned in response body
+      console.log(accessToken);
+      if (accessToken) {
+        localStorage.setItem("authToken", accessToken);
+      }
+
+      navigate("/");
+    } catch (error) {
+      error.response?.data?.message || "An error occurred during signin";
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUser((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   //const navigate = useNavigate();
   return (
@@ -24,19 +66,23 @@ function SignIn() {
 
         {/* Right Side - Form Section */}
         <div className="flex flex-col justify-center w-full sm:w-1/2 px-8 bg-white">
-          <form className="w-full">
+          <form className="w-full" onSubmit={onSignIn}>
             <h2 className="text-3xl font-bold text-center text-black pb-4 font-space">
               Welcome Back
             </h2>
 
             <div className="flex flex-col pb-4">
               <label className="text-sm font-semibold text-black font-space">
-                Username
+                Email
               </label>
               <input
+                name="email"
                 className="border border-gray-300 p-3 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 type="text"
-                placeholder="Enter your username"
+                placeholder="Enter your Email"
+                value={user.email}
+                onChange={handleChange}
+                required
               />
             </div>
 
@@ -45,9 +91,13 @@ function SignIn() {
                 Password
               </label>
               <input
+                name="password"
                 className="border border-gray-300 p-3 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 type="password"
                 placeholder="Enter your password"
+                value={user.password}
+                onChange={handleChange}
+                required
               />
             </div>
 

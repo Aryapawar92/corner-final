@@ -32,6 +32,10 @@ function HeroPage() {
     navigate("/signup");
   };
 
+  const gotoChatBot = () => {
+    navigate("/resources/chatbot");
+  };
+
   return (
     <div className="min-h-screen bg-custom-dark-blue overflow-hidden">
       <div className="hero min-h-screen flex flex-col justify-center items-center relative">
@@ -163,6 +167,7 @@ function HeroPage() {
             <img
               src="src/assets/chatbot.jpg"
               className="w-full h-[350px] overflow-hidden transition duration-300 ease-in-out hover:scale-105"
+              onClick={gotoChatBot}
             />
             <p className="text-md">
               Engage with our powerful chatbot for instant support and

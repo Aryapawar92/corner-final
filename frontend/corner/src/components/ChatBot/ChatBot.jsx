@@ -5,7 +5,7 @@ import axios from "axios";
 
 function ChatBot() {
   const [message, setMessage] = useState("");
-  const [chatResponse, setChatResponse] = useState("");
+  const [chatHistory, setChatHistory] = useState([]);
 
   const handleSendMessage = async () => {
     if (!message.trim()) return;
@@ -15,11 +15,21 @@ function ChatBot() {
         query: message,
       });
 
-      setChatResponse(response.data.response);
+      const chatbotResponse = response.data.response;
+
+      // Append the new message and response to the chat history
+      setChatHistory((prevChatHistory) => [
+        ...prevChatHistory,
+        { question: message, answer: chatbotResponse },
+      ]);
+
       setMessage(""); // Clear input after sending
     } catch (error) {
       console.error("Error communicating with the chatbot:", error);
-      setChatResponse("Sorry, there was an error.");
+      setChatHistory((prevChatHistory) => [
+        ...prevChatHistory,
+        { question: message, answer: "Sorry, there was an error." },
+      ]);
     }
   };
 
@@ -28,8 +38,15 @@ function ChatBot() {
       <h1 className="items-center my-2 text-2xl font-space">
         ⭐Mental Health AI ChatBot⭐
       </h1>
+
+      {/* Chat History */}
       <div className="flex-grow w-full h-[60vh] border-2 border-gray-300 rounded-md bg-white p-4 overflow-y-scroll">
-        <p className="text-lg">{chatResponse}</p>
+        {chatHistory.map((entry, index) => (
+          <div key={index} className="my-2">
+            <p className="font-bold text-blue-500">User: {entry.question}</p>
+            <p className="text-green-600">Chatbot: {entry.answer}</p>
+          </div>
+        ))}
       </div>
 
       {/* Message Input and Send Button */}

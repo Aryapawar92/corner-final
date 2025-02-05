@@ -10,6 +10,8 @@ import Layout from "./components/Layout.jsx";
 import Resources from "./components/Resources/Resources.jsx";
 import About from "./components/About/About.jsx";
 import HeroPage from "./components/HeroPage/HeroPage.jsx";
+import Depression from "./components/depression/depression.jsx";
+import Stress from "./components/stress/Stress.jsx";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +41,14 @@ const router = createBrowserRouter([
       {
         path: "/resources/chatbot",
         element: <ChatBot />,
+      },
+      {
+        path: "/resources/stress",
+        element: <Stress />,
+      },
+      {
+        path: "/resources/depression",
+        element: <Depression />,
       },
     ],
   },

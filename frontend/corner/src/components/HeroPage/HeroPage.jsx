@@ -36,6 +36,10 @@ function HeroPage() {
     navigate("/resources/chatbot");
   };
 
+  const gotoStress = () => {
+    navigate("/resources/stress");
+  };
+
   return (
     <div className="min-h-screen bg-custom-dark-blue overflow-hidden">
       <div className="hero min-h-screen flex flex-col justify-center items-center relative">
@@ -126,7 +130,10 @@ function HeroPage() {
                   <h2 className="text-2xl font-bold justify-center items-center p-6 ml-2 text-black">
                     Track Your Stress Here
                   </h2>
-                  <button className="bg-black text-white font-bold py-2 px-4 rounded-3xl hover:bg-white hover:text-black hover:scale-105 transition duration-300 ease-in-out">
+                  <button
+                    onClick={gotoStress}
+                    className="bg-black text-white font-bold py-2 px-4 rounded-3xl hover:bg-white hover:text-black hover:scale-105 transition duration-300 ease-in-out"
+                  >
                     Click Here
                   </button>
                 </div>

@@ -38,7 +38,7 @@ function Header() {
   };
 
   return (
-    <header className="bg-[#9AD1D4] shadow-md">
+    <header className="bg-[#9AD1D4] shadow-md m-0">
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Left Section */}

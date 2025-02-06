@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { delay, motion, stagger } from "framer-motion";
+import splitString from "../utils/splitString.jsx";
 
 function HeroPage() {
   const navigate = useNavigate();
@@ -40,26 +42,76 @@ function HeroPage() {
     navigate("/resources/stress");
   };
 
+  const heading = "Take Charge of Your Mental Well-Being";
+  const secondHeading = "Access personalized tools to help";
+  const thirdHeading = "you feel your best,anytime.";
+
+  const headingChars = splitString(heading);
+  console.log(headingChars);
+
+  const secondHeadingChars = splitString(secondHeading);
+  const thirdHeadingChars = splitString(thirdHeading);
+
+  const charVariants = {
+    hidden: { opacity: 0 },
+    reveal: { opacity: 1 },
+  };
+
   return (
     <div className="min-h-screen bg-custom-dark-blue overflow-hidden">
       <div className="hero min-h-screen flex flex-col justify-center items-center relative">
         {/* Content */}
         <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Left Side: Text Content */}
-          <div
-            className={`lg:w-1/2 text-center lg:text-left ${
-              transitionClasses
-                ? transitionClasses
-                : "-translate-x-full opacity-0"
-            }`}
-          >
-            <h1 className="text-4xl sm:text-5xl font-bold text-black mb-4 font-space">
-              Take Charge of Your Mental Well-Being
-            </h1>
-            <p className="text-lg sm:text-xl text-black mb-8 font-space">
-              Access personalized tools to help <br /> you feel your best,
-              anytime.
-            </p>
+          <div className={"lg:w-1/2 text-center lg:text-left"}>
+            <motion.h1
+              initial="hidden"
+              whileInView="reveal"
+              transition={{ staggerChildren: 0.02 }}
+              className="text-4xl sm:text-5xl font-bold text-black mb-4 font-space"
+            >
+              {headingChars.map((char) => (
+                <motion.span
+                  key={char}
+                  transition={{ duration: 0.1 }}
+                  variants={charVariants}
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </motion.h1>
+            <motion.p
+              initial="hidden"
+              whileInView="reveal"
+              transition={{ staggerChildren: 0.02 }}
+              className="text-lg sm:text-xl text-black  font-space"
+            >
+              {secondHeadingChars.map((char) => (
+                <motion.span
+                  key={char}
+                  transition={{ duration: 0.5 }}
+                  variants={charVariants}
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </motion.p>
+            <motion.p
+              initial="hidden"
+              whileInView="reveal"
+              transition={{ staggerChildren: 0.02 }}
+              className="text-lg sm:text-xl text-black mb-8 font-space"
+            >
+              {thirdHeadingChars.map((char) => (
+                <motion.span
+                  key={char}
+                  transition={{ duration: 0.5 }}
+                  variants={charVariants}
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </motion.p>
             <div className="flex justify-center lg:justify-start text-white gap-4">
               <button
                 type="button"
@@ -214,11 +266,11 @@ function HeroPage() {
             src="src/assets/signin-cover-2.jpg"
             className="w-[400px] h-[300px]"
           />
-          <div className="p-6 text-lg ">
+          <div className="p-6 text-lg hover:bg-white">
             <h1 className="font-extrabold text-gray-800 font-space">
               Blog Topic
             </h1>
-            <p className="text-gray-600 text-sm font-space my-2">
+            <p className="text-gray-600 text-sm font-space my-2 ">
               Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magnam
               obcaecati doloribus sint, velit ducimus corporis, tenetur quae,
               corrupti quas explicabo laborum eum! Dignissimos ullam, libero

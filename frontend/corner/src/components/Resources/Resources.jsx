@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { MouseEventHandler } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Resources() {
@@ -15,9 +14,9 @@ function Resources() {
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <div className="grid col-span-1 sm:grid-cols-2 md:grid-cols-3 gap-14">
         <motion.div
-          whileHover={{ scale: 1.05 }}
+          whileHover={{ scale: 1.1 }}
           //onMouseMove={handleMouseMove}
-          className="flex flex-col h-120 w-96 rounded-xl bg-gradient-to-br from-indigo-400 to-violet-400 p-4 shadow-lg overflow-hidden group"
+          className="flex flex-col h-120 w-96 rounded-xl bg-gradient-to-br bg-[#9AD1D4] p-4 shadow-lg overflow-hidden group"
         >
           <CardContent
             imageUrl="../src/assets/stress1.jpg"
@@ -27,17 +26,17 @@ function Resources() {
         </motion.div>
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="flex flex-col h-120 w-96 rounded-xl bg-gradient-to-br from-indigo-400 to-violet-400 p-4 shadow-lg overflow-hidden group"
+          className="flex flex-col h-120 w-96 rounded-xl bg-gradient-to-br bg-[#9AD1D4] p-4 shadow-lg overflow-hidden group"
         >
           <CardContent
-            imageUrl="../src/assets/chatbot.jpg"
-            header="Ai ChatBot"
+            imageUrl="../src/assets/snorlax.jpg"
+            header="SnorLax Chatbot"
             to={() => navigate("/resources/chatbot")}
           />
         </motion.div>
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="flex flex-col h-120 w-96 rounded-xl bg-gradient-to-br from-indigo-400 to-violet-400 p-4 shadow-lg overflow-hidden group"
+          className="flex flex-col h-120 w-96 rounded-xl bg-gradient-to-br bg-[#9AD1D4] p-4 shadow-lg overflow-hidden group"
         >
           <CardContent
             imageUrl="../src/assets/dep.jpg"
@@ -53,7 +52,7 @@ function Resources() {
 const CardContent = ({ imageUrl, header, to }) => {
   return (
     <>
-      <div className="relative w-full aspect-square rounded-md overflow-hidden">
+      <div className="relative w-full aspect-square rounded-md overflow-hidden ">
         <img src={imageUrl} alt="Profile Picture" fill />
       </div>
 

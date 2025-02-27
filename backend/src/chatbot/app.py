@@ -47,10 +47,16 @@ def load_or_create_vector_db():
 def setup_qa_chain(vector_db, llm):
     retriever = vector_db.as_retriever()
     prompt_template = """
-    You are a compassionate mental health chatbot. Respond thoughtfully to the following question:
+    You are a compassionate mental health chatbot. Respond thoughtfully to the user's question.
+    - Provide your response in bullet points.
+    - Ensure the response is at max 5 points.
+    - keep it short dont give big response.
+    - If necessary, elaborate on key points to meet the word requirement.
+
     {context}
     User: {question}
-    Chatbot: """
+    Chatbot:
+    - """
     
     PROMPT = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
     
@@ -76,7 +82,11 @@ def chatbot_response():
         return jsonify({"response": "Please provide a query"}), 400
 
     response = qa_chain.run(query)
-    return jsonify({"response": response})
+
+    # Ensure output is in bullet points
+    formatted_response = "\n- " + response.replace(". ", ".\n- ")  # Convert sentences into bullet points
+
+    return jsonify({"response": formatted_response})
 
 
 if __name__ == "__main__":

@@ -29,7 +29,7 @@ function Resources() {
           className="flex flex-col h-120 w-96 rounded-xl bg-gradient-to-br bg-[#9AD1D4] p-4 shadow-lg overflow-hidden group"
         >
           <CardContent
-            imageUrl="../src/assets/snorlax.jpg"
+            imageUrl="../src/assets/chatbot.jpg"
             header="SnorLax Chatbot"
             to={() => navigate("/resources/chatbot")}
           />

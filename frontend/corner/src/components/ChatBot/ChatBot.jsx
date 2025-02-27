@@ -43,8 +43,19 @@ function ChatBot() {
       <div className="flex-grow w-full h-[60vh] border-2 border-gray-300 rounded-md bg-white p-4 overflow-y-scroll">
         {chatHistory.map((entry, index) => (
           <div key={index} className="my-2">
-            <p className="font-bold text-blue-500">User: {entry.question}</p>
-            <p className="text-green-600">Chatbot: {entry.answer}</p>
+            <p className="font-bold font-space text-black text-lg">
+              User: {entry.question}
+            </p>
+            <div className="text-gray-600 font-space text-md">
+              <p className="font-bold">Chatbot:</p>
+              <ul className="list-disc pl-5">
+                {entry.answer
+                  .split("\n")
+                  .map((point, i) =>
+                    point.trim() ? <li key={i}>{point}</li> : null
+                  )}
+              </ul>
+            </div>
           </div>
         ))}
       </div>

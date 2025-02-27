@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { delay, motion, stagger } from "framer-motion";
 import splitString from "../utils/splitString.jsx";
+import BlurText from "./BlurText.jsx";
+import DecryptedText from "./Decrypt.jsx";
 
 function HeroPage() {
   const navigate = useNavigate();
@@ -144,10 +146,15 @@ function HeroPage() {
         </div>
       </div>
 
-      {/* Meet our Team */}
-      <div className="mt-0.5 text-center bg-white">
+      <div className="mt-0.5 flex justify-center items-center bg-white">
         <h1 className="text-black text-4xl font-bold font-space py-8">
-          Our Key Features
+          <BlurText
+            text="Our Key Features!"
+            delay={150}
+            animateBy="words"
+            direction="top"
+            className="text-4xl text-center"
+          />
         </h1>
       </div>
 
@@ -254,9 +261,15 @@ function HeroPage() {
         </section>
       </div>
 
-      <div className="mt-0.5 text-center">
+      <div className="mt-0.5 text-center flex justify-center items-center">
         <h1 className="text-black text-4xl font-bold font-space py-8">
-          Our Daily Posts
+          <BlurText
+            text="Our Daily Posts!"
+            delay={150}
+            animateBy="words"
+            direction="top"
+            className="text-4xl text-center"
+          />
         </h1>
       </div>
 

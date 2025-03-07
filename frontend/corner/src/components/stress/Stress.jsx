@@ -28,18 +28,84 @@ const questions = [
   "In the last month, how often have you felt like you were able to balance work and personal life?",
   "In the last month, how often have you felt that your time was well spent?",
   "In the last month, how often have you found yourself avoiding situations that made you uncomfortable?",
+  "In the last month, how often have you felt pressured by deadlines?",
+  "In the last month, how often have you felt like your workload was unmanageable?",
+  "In the last month, how often have you taken breaks to de-stress?",
+  "In the last month, how often have you felt lonely even when surrounded by people?",
+  "In the last month, how often have you procrastinated because of stress?",
+  "In the last month, how often have you felt underappreciated for your efforts?",
+  "In the last month, how often have you doubted your abilities?",
+  "In the last month, how often have you felt drained at the end of the day?",
+  "In the last month, how often have you found it hard to focus because of stress?",
+  "In the last month, how often have you noticed changes in your appetite due to stress?",
+  "In the last month, how often have you avoided making decisions due to anxiety?",
+  "In the last month, how often have you engaged in stress-relieving activities like exercise or meditation?",
+  "In the last month, how often have you felt disconnected from people you care about?",
+  "In the last month, how often have you felt like you had no control over your daily schedule?",
+  "In the last month, how often have you noticed a decrease in productivity due to stress?",
+  "In the last month, how often have you been able to enjoy hobbies without feeling guilty about work?",
+  "In the last month, how often have you been distracted by stress when trying to relax?",
+  "In the last month, how often have you felt emotionally exhausted?",
+  "In the last month, how often have you struggled with self-doubt?",
+  "In the last month, how often have you compared yourself to others negatively?",
+  "In the last month, how often have you felt like you were falling behind in life?",
+  "In the last month, how often have you experienced mood swings due to stress?",
+  "In the last month, how often have you had difficulty concentrating on tasks?",
+  "In the last month, how often have you felt overwhelmed by financial concerns?",
+  "In the last month, how often have you sought support from friends or family when feeling stressed?",
+  "In the last month, how often have you felt guilty for taking time for yourself?",
+  "In the last month, how often have you wished you could escape your responsibilities?",
+  "In the last month, how often have you had difficulty sleeping due to an overactive mind?",
+  "In the last month, how often have you found it hard to say no to additional work or responsibilities?",
+  "In the last month, how often have you felt that you were doing a good job at balancing life’s demands?",
+  "In the last month, how often have you felt frustrated by things outside your control?",
+  "In the last month, how often have you taken time to appreciate the positives in your life?",
+  "In the last month, how often have you felt that your efforts were in vain?",
+  "In the last month, how often have you worried excessively about the future?",
+  "In the last month, how often have you overanalyzed past mistakes?",
+  "In the last month, how often have you struggled to find motivation?",
+  "In the last month, how often have you used social media as an escape from stress?",
+  "In the last month, how often have you felt that your energy was drained by social interactions?",
+  "In the last month, how often have you turned to unhealthy habits to cope with stress?",
+  "In the last month, how often have you felt nervous before starting a new task?",
+  "In the last month, how often have you been bothered by small annoyances more than usual?",
+  "In the last month, how often have you felt like your efforts weren’t enough?",
+  "In the last month, how often have you found yourself zoning out due to stress?",
+  "In the last month, how often have you struggled with imposter syndrome?",
+  "In the last month, how often have you felt like you had no time for yourself?",
+  "In the last month, how often have you avoided social interactions due to stress?",
+  "In the last month, how often have you worried about meeting expectations from others?",
+  "In the last month, how often have you felt uncertain about your future?",
+  "In the last month, how often have you wished you had better time management?",
+  "In the last month, how often have you felt drained after a work or school day?",
+  "In the last month, how often have you been easily irritated?",
+  "In the last month, how often have you experienced tension headaches?",
+  "In the last month, how often have you lost interest in things you usually enjoy?",
+  "In the last month, how often have you doubted your ability to handle stress?",
+  "In the last month, how often have you second-guessed your decisions?",
+  "In the last month, how often have you struggled with setting boundaries?",
+  "In the last month, how often have you found yourself overcommitting?",
+  "In the last month, how often have you felt like your stress was affecting your relationships?",
+  "In the last month, how often have you found it hard to disconnect from work or studies?",
+  "In the last month, how often have you thought about making big life changes due to stress?",
+  "In the last month, how often have you felt overwhelmed by the news or world events?",
+  "In the last month, how often have you struggled with maintaining a positive outlook?",
+  "In the last month, how often have you felt a lack of motivation to do daily tasks?",
+  "In the last month, how often have you questioned your purpose or goals?",
+  "In the last month, how often have you looked forward to the future with excitement?",
 ];
 
 const Stress = () => {
   const [formData, setFormData] = useState({});
   const [stressLevel, setStressLevel] = useState(null);
   const [randomQuestions, setRandomQuestions] = useState([]);
+  const [chatbotResponse, setChatbotResponse] = useState(""); // Store chatbot's response
 
   useEffect(() => {
-    // Randomly select 10 distinct questions
+    // Randomly select 15 distinct questions
     const shuffledQuestions = questions
       .sort(() => 0.5 - Math.random())
-      .slice(0, 10);
+      .slice(0, 15);
     setRandomQuestions(shuffledQuestions);
 
     // Initialize formData for selected questions
@@ -55,6 +121,7 @@ const Stress = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Fetch stress level
       const response = await axios.post(
         "http://localhost:5000/predict",
         formData
@@ -65,18 +132,32 @@ const Stress = () => {
     }
   };
 
-  const stressColors = ["#00ff00", "#ffcc00", "#ff0000"];
-  const stressLabels = ["Low", "Medium", "Chronic"];
+  useEffect(() => {
+    if (stressLevel !== null) {
+      fetchChatbotResponse();
+    }
+  }, [stressLevel]); // Automatically call chatbot API when stressLevel updates
+
+  const fetchChatbotResponse = async () => {
+    try {
+      const chatbotRes = await axios.post("http://localhost:5001/chatbot", {
+        query: "Provide remedies for stress relief.",
+        stress_level: stressLevel, // Send stress level to API
+      });
+      setChatbotResponse(chatbotRes.data.response);
+    } catch (error) {
+      console.error("Error fetching chatbot response:", error);
+    }
+  };
 
   return (
-    <div className="flex items-center justify-between min-h-screen ">
+    <div className="flex items-center justify-between min-h-screen">
       {/* Left side: Questions and options */}
-      <div className="w-full max-w-3xl bg-gray-50 p-8  shadow-xl flex flex-col">
+      <div className="w-full max-w-3xl bg-gray-50 p-8 shadow-xl flex flex-col">
         <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
           Stress Level Tracker
         </h2>
 
-        {/* Scrollable container for questions */}
         <div
           className="overflow-y-auto flex-grow"
           style={{ maxHeight: "550px" }}
@@ -130,12 +211,13 @@ const Stress = () => {
         </button>
       </div>
 
-      {/* Right side: Circular Progress Bar */}
-      <div className="flex justify-center items-center w-[200px] h-full mx-36 ">
+      {/* Right side: Stress Meter and Remedies Section */}
+      <div className="flex flex-col justify-center items-center w-[400px] h-full mx-36">
+        {/* Stress Meter */}
         {stressLevel !== null && (
           <Progress
             classNames={{
-              base: "w-[300px] drop-shadow-md",
+              base: "w-[350px] drop-shadow-md mb-8",
               track: "border border-default",
               indicator: "bg-gradient-to-r from-pink-500 to-yellow-500 h-4",
               label: "tracking-wider font-medium text-default-600 text-lg",
@@ -144,8 +226,19 @@ const Stress = () => {
             radius="lg"
             showValueLabel={true}
             size="xl"
-            value={(stressLevel + 1) * 33.3}
+            value={(stressLevel + 1) * 10}
           />
+        )}
+
+        {/* Remedies Section - Generated by Chatbot */}
+        {/* Remedies Section - Generated by Chatbot */}
+        {stressLevel !== null && chatbotResponse && (
+          <div className=" bg-gray-100 p-8 rounded-lg shadow-lg h-[450px] w-[650px] mr-12 overflow-y-auto">
+            <h3 className="text-2xl font-semibold text-gray-800 text-center mb-4">
+              Remedies
+            </h3>
+            <p className="text-gray-700 text-md">{chatbotResponse}</p>
+          </div>
         )}
       </div>
     </div>

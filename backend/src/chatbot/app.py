@@ -16,7 +16,7 @@ CORS(app)
 def initialize_llm():
     llm = ChatGroq(
         temperature=0,
-        groq_api_key="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",
+        groq_api_key="",
         model_name="llama-3.3-70b-versatile"
     )
     return llm
